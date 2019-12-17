@@ -1,15 +1,23 @@
 
-
 def coords (features):
+    """
+    :param features: vstupní seznam prvků vzniklých z geoJSON
+    :return: vrací seznam, který obsahuje souřadnice x,y a prázdné místo dále využité pro cluster_id
+    """
     points =[]
     for point in features:
         x = point['geometry']['coordinates'][0]
         y = point['geometry']['coordinates'][1]
         points.append([x,y,''])
-    print(points)
+    #print(points)
     return points
 
 def edges(features):
+    """
+    :param features: vstupní seznam prvků vzniklých z geoJSON
+    :return points: seznam, který obsahuje souřadnice x,y a prázdné místo dále využité pro cluster_id
+    :return bounding box: seznam, který obsahuje souřadnice bodů left,right,bottom a top
+    """
     #print(len(features))
     # points = data["features"]
     points = coords(features)
@@ -21,26 +29,28 @@ def edges(features):
     pointsY = sorted(points,key=lambda y: y[1])
     bottom = pointsY[0][1]
     top = pointsY[-1][1]
-    # vypíše to hrany - pouze souřadnici x u left a right a pouze souřadnici y u top a bottom
-
-    # vypocet středu
-    #mid_x = ((left + right)/2)
     bounding_box = [left,right,bottom,top]
-    #print(bounding_box)
-    return bounding_box
+    #print(bounding_box," \n",points )
+    return bounding_box, points
 
-def split_points(features,box,quadrant):
+def split_points(points,box,quadrant):
+    """
+    :param points: vstupní seznam bodů
+    :param box: seznam obsahující souřadnice bodů left,right,bottom,up kvadrantu, pro který funkci počítáme
+    :param quadrant: číslo kvadrantu, pro který počítáme
+    :return: seznam
+    """
     quad = []
-    for point in features:
-        #point['properties']['id_cluster'] = ""
-        #+str(quadrant)
-        coordinates = point['geometry']['coordinates']
-        x = coordinates[0]
-        y = coordinates[1]
+    for point in points:
+        id = point[2]
+        id_cluster = id + str(quadrant)
+        x = point[0]
+        y = point[1]
         if box[0] <= x <= box[2] and box[1] <= y <= box[3]:
-            quad.append(x)
-            quad.append(y)
-
+            quad.append([x,y,id_cluster])
+        else:
+            continue
+    #print(quad)
     return quad
 
 def building_quadtree (features, box,quadrant= 0):
