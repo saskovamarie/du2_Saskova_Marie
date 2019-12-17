@@ -3,13 +3,14 @@
 def coords (features):
     points =[]
     for point in features:
-        coordinates = point['geometry']['coordinates']
-        points.append(coordinates)
+        x = point['geometry']['coordinates'][0]
+        y = point['geometry']['coordinates'][1]
+        points.append([x,y,''])
     print(points)
     return points
 
 def edges(features):
-    print(len(features))
+    #print(len(features))
     # points = data["features"]
     points = coords(features)
     # seřazení podle osy X
@@ -23,49 +24,59 @@ def edges(features):
     # vypíše to hrany - pouze souřadnici x u left a right a pouze souřadnici y u top a bottom
 
     # vypocet středu
-    mid_x = ((left + right)/2)
-    mid_y = ((bottom + top)/2)
-    print(mid_x,mid_y)
-    bounding_box = [mid_x,mid_y,left,right,bottom,top]
+    #mid_x = ((left + right)/2)
+    bounding_box = [left,right,bottom,top]
+    #print(bounding_box)
     return bounding_box
 
-def split_points(points,box):
-
-    NW = []
-    NE = []
-    SW = []
-    SE = []
-    for point in points:
-        point['properties']['id_cluster']=''
+def split_points(features,box,quadrant):
+    quad = []
+    for point in features:
+        #point['properties']['id_cluster'] = ""
+        #+str(quadrant)
         coordinates = point['geometry']['coordinates']
         x = coordinates[0]
         y = coordinates[1]
-        if (x < box[0]) and (y < box[1]):
-            point['properties']['id_cluster'] += '1'
-            SW.append(point)
-        if (x < box[0]) and (y > box[1]):
-            point['properties']['id_cluster'] += '2'
-            NW.append(point)
-        if (x > box[0]) and (y < box[1]):
-            point['properties']['id_cluster'] += '3'
-            SE.append(point)
-        if (x > box[0]) and (y > box[1]):
-            point['properties']['id_cluster'] += '4'
-            NE.append(point)
-    return NW,NE,SW,SE
+        if box[0] <= x <= box[2] and box[1] <= y <= box[3]:
+            quad.append(x)
+            quad.append(y)
 
-def building_quadtree (input_points, box):
-    if len(input_points)< 5:
-        return(input_points)
+    return quad
 
-    NW,NE,SW,SE = split_points(input_points,box)
+def building_quadtree (features, box,quadrant= 0):
+    if len(features)< 5:
+        output_list = []
+        for point in features:
+            output_list.append(point)
+        print(output_list)
+
+    else:
+        mid = [((box[0] + box[1]) / 2),((box[2] + box[3]) / 2)]
+        if quadrant == 0:
+            box = box
+        elif quadrant == 1:
+            box = [box[0],mid[0],mid[1],box[2]]
+        elif quadrant == 2:
+            box = [mid[0],box[1],mid[1],box[3]]
+        elif quadrant == 3:
+            box = [box[0],mid[0],box[2],mid[1]]
+        elif quadrant == 4:
+            box = [mid[0],box[1],box[2],mid[1]]
+
+        quad1 = split_points(features,box,1)
+        quad2 = split_points(features,box,2)
+        quad3 = split_points(features,box,3)
+        quad4 = split_points(features,box,4)
+
+        # rekurzivní volání funkce v každém bounding boxu
+        building_quadtree(quad1,box,1)
+        building_quadtree(quad2,box,2)
+        building_quadtree(quad3,box,3)
+        building_quadtree(quad4,box,4)
 
 
-    building_quadtree(SW,box)
-    building_quadtree(NW,box)
-    building_quadtree(SE,box)
-    building_quadtree(NE, box)
-    print("sw:",SW, "délka:",len(SW))
-    print("nw:",NW,"délka:",len(NW))
-    print("se:",SE,"délka:",len(SE))
-    print("ne:",NE,"délka:",len(NE))
+
+
+
+
+
