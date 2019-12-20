@@ -1,4 +1,4 @@
-#### DĚLENÍ ADRESNÍCH BODŮ POMOCÍ AlGORITMU QUADTREE
+#### DĚLENÍ ADRESNÍCH BODŮ POMOCÍ ALGORITMU QUADTREE
 
 Program načte vstupní data ze souboru `input.geojson` a prvky ze souboru rozdělí do kvadrantů dokud není v jednotlivých kvadrantech méně než 50  prvků. Každému prvku přidá informaci o tom, do jakého kvadrantu patří a prvky vypíše do souboru `output.geojson`.
 
