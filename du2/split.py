@@ -7,7 +7,7 @@ features = data["features"]
 
 #print(len(features))
 
-left,right,bottom,top = quad_tree.get_bounding_box(features)
+left,right,bottom,top = quad_tree.get_bbox(features)
 mid_x = ((left + right)/2)
 mid_y = ((bottom + top)/2)
 len_x = abs(left - right)/2
