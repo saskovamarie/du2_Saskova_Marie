@@ -1,28 +1,26 @@
 
 
-def edges(features):
+def get_bbox(features):
     """
     :param features: vstupní seznam prvků vzniklých z geoJSON
     :return bounding box: seznam, který obsahuje souřadnice bodů left,right,bottom a top
     """
-    points = []
+    X = []
+    Y = []
     for feature in features:
-        coordinates = feature['geometry']['coordinates']
-        points.append(coordinates)
-    print(points)
-    # seřazení podle osy X
-    pointsX = sorted(points, key=lambda x: x[0])
-    left = pointsX[0][0]
-    right = pointsX[-1][0]
-    print(left,right)
-    # sort podle Y
-    pointsY = sorted(points,key=lambda y: y[1])
-    bottom = pointsY[0][1]
-    top = pointsY[-1][1]
+        x = feature['geometry']['coordinates'][0]
+        y = feature['geometry']['coordinates'][1]
+        X.append(x)
+        Y.append(y)
+    left = min(X)
+    right = max(X)
+    bottom = min(Y)
+    top = max(Y)
     bounding_box = [left, right, bottom, top]
+    #  print(bounding_box)
     return bounding_box
 
-def split_points(features,mid_x, mid_y):
+def split_features(features,mid_x, mid_y):
     """
     Funkce vytvoří seznam pro každý kvadrant, body podle x,y souřadnic rozdělí do jednotlivých kvadrantů a za cluster_id
     každého bodu přiřadí 1 - 4 podle kvadrantu, do kterého spadá (pokud prvek ještě nemá cluster_id vytvoří jej)
@@ -31,7 +29,6 @@ def split_points(features,mid_x, mid_y):
     :param mid_y: střed na ose y, podle kterého jsou prvky rozděleny
     :return: seznamy prvků náležících do jednotlivých kvadrantů - quad1, quad2, quad3, quad4
     """
-
     quad1 = []
     quad2 = []
     quad3 = []
