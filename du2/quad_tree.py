@@ -70,25 +70,24 @@ def quadtree (features, output_list, mid_x, mid_y, len_x, len_y, x = 0):
         for point in features:
             output_list.append(point)
         return output_list
+    
+    if x == 1:
+        mid_x = mid_x - len_x
+        mid_y = mid_y + len_y
+    if x == 2:
+        mid_x = mid_x + len_x
+        mid_y = mid_y + len_y
+    if x == 3:
+        mid_x = mid_x - len_x
+        mid_y = mid_y - len_y
+    if x == 4:
+        mid_x = mid_x + len_x
+        mid_y = mid_y - len_y
 
-    if x != 0:
-        if x == 1:
-            mid_x = mid_x - len_x
-            mid_y = mid_y + len_y
-        if x == 2:
-            mid_x = mid_x + len_x
-            mid_y = mid_y + len_y
-        if x == 3:
-            mid_x = mid_x - len_x
-            mid_y = mid_y - len_y
-        if x == 4:
-            mid_x = mid_x + len_x
-            mid_y = mid_y - len_y
-
-    quad1, quad2, quad3, quad4 = split_points(features, mid_x, mid_y)
+    quad1, quad2, quad3, quad4 = split_features(features, mid_x, mid_y)
     quadtree(quad1, output_list, mid_x, mid_y, len_x / 2, len_y / 2, x=1)
     quadtree(quad2, output_list, mid_x, mid_y, len_x / 2, len_y / 2, x=2)
     quadtree(quad3, output_list, mid_x, mid_y, len_x / 2, len_y / 2, x=3)
     quadtree(quad4, output_list, mid_x, mid_y, len_x / 2, len_y / 2, x=4)
-    # rekurzivní volání funkce v každém bounding boxu
+    
     return output_list
