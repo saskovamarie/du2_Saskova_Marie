@@ -1,6 +1,6 @@
 #### DĚLENÍ ADRESNÍCH BODŮ POMOCÍ ALGORITMU QUADTREE
 
-Program načte vstupní data ze souboru `input.geojson` a prvky ze souboru rozdělí do kvadrantů dokud není v jednotlivých kvadrantech méně než 50  prvků. Každému prvku přidá informaci o tom, do jakého kvadrantu patří a prvky vypíše do souboru `output.geojson`.
+Program načte vstupní data ze souboru `input.geojson` a prvky ze souboru rozdělí do kvadrantů dokud není v jednotlivých kvadrantech méně než 50  prvků. Každému prvku přidá informaci o tom, do jakého kvadrantu patří v textovém datovém typu a prvky vypíše do souboru `output.geojson`.
 
 ###### Vstupy:
 
@@ -18,7 +18,7 @@ Program načte vstupní data ze souboru `input.geojson` a prvky ze souboru rozd�
 
 - *split_features(features, mid_x, mid_y)*
 
-  funkce vytvoří pro každý kvadrant seznam, prvky rozdělí do jednotlivých kvadrantů podle souřadnic x,y a za cluster_id v properties přiřadí číslo kvadrantu 1-4 , pokud prvek ještě nemá cluster_id vytvoří jej, funkce vrací seznamy prvků v jednotlivých kvadrantech
+  funkce vytvoří pro každý kvadrant seznam, prvky rozdělí do jednotlivých kvadrantů podle souřadnic x,y, pokud prvek ještě nenese informaci o tom, do jakého kvadrantu patří vytvoří funkce nové property `cluster_id` ve datovém typu string, do cluster_id se při opakovaném přiřazení prvku do kvadrantu připisuje číslo kvadrantu (1-4) za již stávající číslo ve formátu string, tímto způsobem každý prvek obsahuje informaci i o kvadrantech nadřazených, funkce vrací seznamy prvků v jednotlivých kvadrantech
 
 - *quadtree(features, output_list, mid_x, mid_y, len_x, len_y, x = 0)*
 
