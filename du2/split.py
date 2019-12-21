@@ -11,7 +11,7 @@ mid_y = ((bottom + top)/2)
 len_x = abs(left - right)/2
 len_y = abs(bottom - top)/2
 output_list = []
-output_list = quad_tree.quadtree(features,output_list,mid_x,mid_y,len_x,len_y)
+output_list = quad_tree.quadtree(features,output_list,mid_x,mid_y,len_x,len_y)   #  seznam prvků obsahující navíc cluster_id
 
 gj_structure = {"type": "FeatureCollection"}
 gj_structure['features'] = output_list
